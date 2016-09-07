@@ -22,37 +22,40 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 
 public class Po3Activity extends Activity implements JiuanPO3Observer {
     private PO3Control poControl;
-
-    private Button btn_connect;
-    private Button btn_bettary;
-    private Button btn_history, btn_realdata;
-
     private DeviceManager deviceManager;
     private String mAddress;
-
-    private Stream userStream;
-    private Stream batteryStream;
-    private Stream historyStream;
-    private Stream resultStream;
+    private Stream spo2Stream;
+    private Stream pulseStream;
+    private Stream perfStream;
     private Connection connection;
     private EventsCallback eventsCallback;
-    private GetEventsCallback getEventsCallback;
     private StreamsCallback streamsCallback;
-    private GetStreamsCallback getStreamsCallback;
     private Credentials credentials;
+    private TextView spo2View;
+    private TextView pulseView;
+    private TextView perfView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_po3);
+
+        spo2View = (TextView) findViewById(R.id.spo2_po3);
+        pulseView = (TextView) findViewById(R.id.pulse_po3);
+        perfView = (TextView) findViewById(R.id.perf_po3);
 
         // get control by device mac
         deviceManager = DeviceManager.getInstance();
@@ -65,7 +68,17 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
             poControl.addObserver(this);
         }
 
-        initView();
+        /**
+         * userId, the identification of the user, could be the form of email address or
+         * mobile phone number (mobile phone number is not supported temporarily). clientID
+         * and clientSecret, as the identification of the SDK, will be issued after the
+         * iHealth SDK registration. please contact lvjincan@jiuan.com for registration.
+         */
+        String userId = "liu01234345555@jiuan.com";
+        final String clientID = "2a8387e3f4e94407a3a767a72dfd52ea";
+        final String clientSecret = "fd5e845c47944a818bc511fb7edb0a77";
+        poControl.connect(Po3Activity.this, userId, clientID, clientSecret);
+
 
         credentials = new Credentials(this);
         if(credentials.hasCredentials()) {
@@ -73,71 +86,22 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
             setCallbacks();
             connection = new Connection(Po3Activity.this, credentials.getUsername(), credentials.getToken(), LoginActivity.DOMAIN, true, new DBinitCallback());
             Filter scope = new Filter();
-            userStream = new Stream("oximeter_user", "Oximeter User");
-            batteryStream = new Stream("oximeter_battery", "Oximeter Battery");
-            historyStream = new Stream("oximeter_history", "Oximeter History");
-            resultStream = new Stream("oximeter_result", "Oximeter Result");
-            scope.addStream(userStream);
-            scope.addStream(batteryStream);
-            scope.addStream(historyStream);
-            scope.addStream(resultStream);
+            spo2Stream = new Stream("oximeter_spo2", "Oximeter O2%");
+            pulseStream = new Stream("oximeter_pulse", "Oximeter PulseRate");
+            perfStream = new Stream("oximeter_perf", "Oximeter PerfusionIndex");
+            scope.addStream(spo2Stream);
+            scope.addStream(pulseStream);
+            scope.addStream(perfStream);
             connection.setupCacheScope(scope);
-            connection.streams.create(userStream, streamsCallback);
-            connection.streams.create(batteryStream, streamsCallback);
-            connection.streams.create(historyStream, streamsCallback);
-            connection.streams.create(resultStream, streamsCallback);
+            connection.streams.create(spo2Stream, streamsCallback);
+            connection.streams.create(pulseStream, streamsCallback);
+            connection.streams.create(perfStream, streamsCallback);
         }
     }
 
-    private void initView() {
-        btn_connect = (Button) findViewById(R.id.connect);
-        btn_connect.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                /**
-                 * userId, the identification of the user, could be the form of email address or
-                 * mobile phone number (mobile phone number is not supported temporarily). clientID
-                 * and clientSecret, as the identification of the SDK, will be issued after the
-                 * iHealth SDK registration. please contact lvjincan@jiuan.com for registration.
-                 */
-                String userId = "liu01234345555@jiuan.com";
-                final String clientID = "2a8387e3f4e94407a3a767a72dfd52ea";
-                final String clientSecret = "fd5e845c47944a818bc511fb7edb0a77";
-                poControl.connect(Po3Activity.this, userId, clientID, clientSecret);
-            }
-        });
-
-        btn_bettary = (Button) findViewById(R.id.bettary);
-        btn_bettary.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                poControl.getBattery();
-            }
-        });
-        btn_history = (Button) findViewById(R.id.history);
-        btn_history.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                poControl.syncHistoryDatas();
-            }
-        });
-        btn_realdata = (Button) findViewById(R.id.realdata);
-        btn_realdata.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                poControl.startRealTime();
-            }
-        });
-
-    }
+    // Oximeter possible action
+    // poControl.getBattery();
+    // poControl.syncHistoryDatas();
 
     private Handler handler = new Handler() {
 
@@ -145,37 +109,26 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             super.handleMessage(msg);
-            boolean connectedToPryv = (connection!=null && credentials.hasCredentials());
             switch (msg.what) {
                 case 0:
                     int userStatus = ((Bundle) (msg.obj)).getInt("status");
-                    Toast.makeText(getApplicationContext(), "PO3 UserStatus=" + userStatus, Toast.LENGTH_SHORT).show();
-                    if(connectedToPryv) {
-                        connection.events.create(new Event(userStream.getId(), "note/txt", ""+userStatus), eventsCallback);
+                    Toast.makeText(Po3Activity.this,"Auth status: " + userStatus, Toast.LENGTH_SHORT);
+                    if(userStatus==2) {
+                        poControl.startRealTime();
                     }
                     break;
                 case 1:
-                    int battery = ((Bundle) (msg.obj)).getInt("battery");
-                    Toast.makeText(getApplicationContext(), "PO3 battery=" + battery, Toast.LENGTH_SHORT).show();
-                    if(connectedToPryv) {
-                        connection.events.create(new Event(batteryStream.getId(), "note/txt", ""+battery), eventsCallback);
+                    String real = ((Bundle) (msg.obj)).getString("real");
+                    try {
+                        JSONObject data = new JSONObject(real);
+                        JSONArray array = data.getJSONArray("Data");
+                        JSONObject object = array.getJSONObject(0);
+                        spo2View.setText(object.getString("bloodOxygen"));
+                        pulseView.setText(object.getString("pulseRate"));
+                        perfView.setText(object.getString("PI"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    break;
-                case 2:
-                    String historyData = ((Bundle) (msg.obj)).getString("historyData");
-                    Toast.makeText(getApplicationContext(), "PO3 historyData=" + historyData, Toast.LENGTH_SHORT)
-                            .show();
-                    if(connectedToPryv) {
-                        connection.events.create(new Event(historyStream.getId(), "note/txt", historyData), eventsCallback);
-                    }                    break;
-                case 3:
-                    String result = ((Bundle) (msg.obj)).getString("result");
-                    Toast.makeText(getApplicationContext(), "PO3 result=" + result, Toast.LENGTH_SHORT).show();
-                    if(connectedToPryv) {
-                        connection.events.create(new Event(resultStream.getId(), "note/txt", result), eventsCallback);
-                    }                    break;
-                case 4:
-                    Toast.makeText(getApplicationContext(), "no historyData", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -186,8 +139,7 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
 
     @Override
     public void msgUserStatus(int status) {
-        // TODO Auto-generated method stub
-        Log.i("act", "user status" + status);
+        Log.i("act", "user status: " + status);
         Message msg = new Message();
         Bundle bundle = new Bundle();
         bundle.putInt("status", status);
@@ -198,52 +150,33 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
 
     @Override
     public void msgBattery(int battery) {
-        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void msgHistroyData(String historyData) {
+    }
+
+    @Override
+    public void msgRealtimeData(String realData) {
+        Log.i("act", "real data: " + realData);
         Message msg = new Message();
         Bundle bundle = new Bundle();
-        bundle.putInt("battery", battery);
+        bundle.putString("real", realData);
         msg.what = 1;
         msg.obj = bundle;
         handler.sendMessage(msg);
     }
 
     @Override
-    public void msgHistroyData(String historyData) {
-        // TODO Auto-generated method stub
-        if (historyData == null) {
-            Log.d("history", "no historyData");
-            handler.sendEmptyMessage(4);
-            /**
-             * There is no historical data
-             */
-        } else {
-            Log.i("history", historyData);
-            Message msg = new Message();
-            Bundle bundle = new Bundle();
-            bundle.putString("historyData", historyData);
-            msg.what = 2;
-            msg.obj = bundle;
-            handler.sendMessage(msg);
-        }
-
-    }
-
-    @Override
-    public void msgRealtimeData(String realData) {
-        // TODO Auto-generated method stub
-        Log.i("real", realData);
-    }
-
-    @Override
     public void msgResultData(String result) {
-        // TODO Auto-generated method stub
-        Log.i("end", result);
-        Message msg = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putString("result", result);
-        msg.what = 3;
-        msg.obj = bundle;
-        handler.sendMessage(msg);
+    }
+
+    public void sendToPryv(View v) {
+        if(connection!=null && credentials.hasCredentials()) {
+            connection.events.create(new Event(spo2Stream.getId(),"note/txt",spo2View.getText().toString()), eventsCallback);
+            connection.events.create(new Event(pulseStream.getId(),"note/txt",pulseView.getText().toString()), eventsCallback);
+            connection.events.create(new Event(perfStream.getId(),"note/txt",perfView.getText().toString()), eventsCallback);
+        }
     }
 
     /**
@@ -299,53 +232,5 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
             }
 
         };
-
-        //Called when actions related to events retrieval complete
-        getEventsCallback = new GetEventsCallback() {
-            @Override
-            public void cacheCallback(List<Event> list, Map<String, Double> map) {
-                Log.i("Pryv", list.size() + " events retrieved from cache.");
-            }
-
-            @Override
-            public void onCacheError(String s) {
-                Log.e("Pryv", s);
-            }
-
-            @Override
-            public void apiCallback(List<Event> list, Map<String, Double> map, Double aDouble) {
-                Log.i("Pryv", list.size() + " events retrieved from API.");
-            }
-
-            @Override
-            public void onApiError(String s, Double aDouble) {
-                Log.e("Pryv", s);
-            }
-        };
-
-        //Called when actions related to streams retrieval complete
-        getStreamsCallback = new GetStreamsCallback() {
-
-            @Override
-            public void cacheCallback(Map<String, Stream> map, Map<String, Double> map1) {
-                Log.i("Pryv", map.size() + " streams retrieved from cache.");
-            }
-
-            @Override
-            public void onCacheError(String s) {
-                Log.e("Pryv", s);
-            }
-
-            @Override
-            public void apiCallback(Map<String, Stream> map, Map<String, Double> map1, Double aDouble) {
-                Log.i("Pryv", map.size() + " streams retrieved from API.");
-            }
-
-            @Override
-            public void onApiError(String s, Double aDouble) {
-                Log.e("Pryv", s);
-            }
-        };
-
     }
 }

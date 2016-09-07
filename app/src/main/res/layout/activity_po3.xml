@@ -2,53 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <Button
-                android:id="@+id/connect"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:text="connect" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-                <Button
-                    android:id="@+id/bettary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="bettary" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-                <Button
-                    android:id="@+id/history"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="sync historyData" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-                <Button
-                    android:id="@+id/realdata"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="realData" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SpO2% :"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/spo2_po3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pulse rate :"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/pulse_po3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Perfusion index :"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/perf_po3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+
+    <Button
+        android:id="@+id/send_to_pryv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="sendToPryv"
+        android:text="Send to Pryv"
+        android:textSize="28sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>
