@@ -173,9 +173,9 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
 
     public void sendToPryv(View v) {
         if(connection!=null && credentials.hasCredentials()) {
-            connection.events.create(new Event(spo2Stream.getId(),"note/txt",spo2View.getText().toString()), eventsCallback);
-            connection.events.create(new Event(pulseStream.getId(),"note/txt",pulseView.getText().toString()), eventsCallback);
-            connection.events.create(new Event(perfStream.getId(),"note/txt",perfView.getText().toString()), eventsCallback);
+            connection.events.create(new Event(spo2Stream.getId(),"ratio/percent",spo2View.getText().toString()), eventsCallback);
+            connection.events.create(new Event(pulseStream.getId(),"frequency/bpm",pulseView.getText().toString()), eventsCallback);
+            connection.events.create(new Event(perfStream.getId(),"count/generic",perfView.getText().toString()), eventsCallback);
         }
     }
 
