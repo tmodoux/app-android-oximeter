@@ -48,64 +48,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name="com.example.sdk_demo.BG5Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.BG1Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.BP5Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.BP7Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.BP3Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.AM3Activity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.AM3SActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.Hs3Activity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.Hs4Activity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.Hs5Activity_bt"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.Hs5Activity_wifi"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="com.example.sdk_demo.Po3Activity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.ABI_Activity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.example.sdk_demo.Hs4sActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".LoginActivity"/>

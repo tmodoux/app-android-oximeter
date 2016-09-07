@@ -233,86 +233,9 @@ public class MainActivity extends Activity implements Interface_Observer_BGCoomM
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View view,
                         int position, long id) {
-                    if (mDeviceList.get(position).get("type").equals("BG1")) {
-                        // deviceManager.cancelScanDevice();
-                        // Intent intent = new Intent(MainActivity.this, BG1Activity.class);
-                        // intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        // startActivity(intent);
-                    } else if (mDeviceList.get(position).get("type").equals("BG5")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, BG5Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("BP3")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, BP3Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("BP5")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, BP5Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("BP7")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, BP7Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("HS3")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, Hs3Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("HS4")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, Hs4Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("HS4S")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, Hs4sActivity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("HS5")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, Hs5Activity_bt.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("HS5WIFI")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, Hs5Activity_wifi.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("AM3")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, AM3Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("AM3S")) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, AM3SActivity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").equals("PO3")) {
+                    if (mDeviceList.get(position).get("type").equals("PO3")) {
                         deviceManager.cancelScanDevice();
                         Intent intent = new Intent(MainActivity.this, Po3Activity.class);
-                        intent.putExtra("mac", mDeviceList.get(position).get("mac"));
-                        startActivity(intent);
-                        return;
-                    } else if (mDeviceList.get(position).get("type").contains(ABICommManager.DEVICETYPE)) {
-                        deviceManager.cancelScanDevice();
-                        Intent intent = new Intent(MainActivity.this, ABI_Activity.class);
                         intent.putExtra("mac", mDeviceList.get(position).get("mac"));
                         startActivity(intent);
                         return;
