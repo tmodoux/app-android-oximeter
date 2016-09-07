@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="right"
+            android:text="ssid"
+            android:textColor="#CCCCCC"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/btSetWiFi_tv_SSID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/textView1"
+            android:ems="10"
+            android:textColor="#CCCCCC"
+            android:textSize="20dp" >
+        </TextView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <TextView
+            android:id="@+id/textpsw11"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="right"
+            android:text="password"
+            android:textColor="#CCCCCC"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/btSetWiFi_et_Pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/textpsw11"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+</LinearLayout>
