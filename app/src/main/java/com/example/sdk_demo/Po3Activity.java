@@ -36,10 +36,10 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
     private PO3Control poControl;
     private DeviceManager deviceManager;
     private String mAddress;
-    //private Stream spo2Stream;
-    //private Stream pulseStream;
-    //private Stream perfStream;
     private Stream mainStream;
+    private Stream spo2Stream;
+    private Stream pulseStream;
+    private Stream perfStream;
     private Connection connection;
     private EventsCallback eventsCallback;
     private StreamsCallback streamsCallback;
@@ -87,19 +87,19 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
             setCallbacks();
             connection = new Connection(Po3Activity.this, credentials.getUsername(), credentials.getToken(), LoginActivity.DOMAIN, true, new DBinitCallback());
             Filter scope = new Filter();
-            //spo2Stream = new Stream("oximeter_spo2", "Oximeter O2%");
-            //pulseStream = new Stream("oximeter_pulse", "Oximeter PulseRate");
-            //perfStream = new Stream("oximeter_perf", "Oximeter PerfusionIndex");
+            spo2Stream = new Stream("oximeter_spo2", "Blood oxygen %");
+            pulseStream = new Stream("oximeter_pulse", "Pulse Rate");
+            perfStream = new Stream("oximeter_perf", "Perfusion Index");
             mainStream = new Stream("oximeter", "Oximeter");
-            //scope.addStream(spo2Stream);
-            //scope.addStream(pulseStream);
-            //scope.addStream(perfStream);
+            mainStream.addChildStream(spo2Stream);
+            mainStream.addChildStream(perfStream);
+            mainStream.addChildStream(pulseStream);
             scope.addStream(mainStream);
             connection.setupCacheScope(scope);
-            //connection.streams.create(spo2Stream, streamsCallback);
-            //connection.streams.create(pulseStream, streamsCallback);
-            //connection.streams.create(perfStream, streamsCallback);
             connection.streams.create(mainStream, streamsCallback);
+            connection.streams.create(spo2Stream, streamsCallback);
+            connection.streams.create(pulseStream, streamsCallback);
+            connection.streams.create(perfStream, streamsCallback);
         }
     }
 
@@ -178,9 +178,9 @@ public class Po3Activity extends Activity implements JiuanPO3Observer {
     public void sendToPryv(View v) {
         if(connection!=null && credentials.hasCredentials()) {
             double time = System.currentTimeMillis()/1000;
-            Event o2 = new Event(mainStream.getId(),"ratio/percent",spo2View.getText().toString());
-            Event pulse = new Event(mainStream.getId(),"frequency/bpm",pulseView.getText().toString());
-            Event perf = new Event(mainStream.getId(),"count/generic",perfView.getText().toString());
+            Event o2 = new Event(spo2Stream.getId(),"ratio/percent",spo2View.getText().toString());
+            Event pulse = new Event(pulseStream.getId(),"frequency/bpm",pulseView.getText().toString());
+            Event perf = new Event(perfStream.getId(),"count/generic",perfView.getText().toString());
             o2.setTime(time);
             pulse.setTime(time);
             perf.setTime(time);
